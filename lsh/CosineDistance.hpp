@@ -1,24 +1,24 @@
 #ifndef COSINEDISTANCE_HPP
 #define COSINEDISTANCE_HPP
 
-#include <vector>
 #include <Eigen/Dense>
+#include <vector>
+
 #include "LSH.hpp"
 
-using namespace std;
-using namespace Eigen;
+using Eigen::MatrixXd;
+using Eigen::VectorXd;
 
-class CosineDistance : public LSH
-{
-public:
+class CosineDistance : public LSH {
+   public:
     CosineDistance() = default;
     CosineDistance(int b, int L, int d);
-    vector<int> hashSignature(VectorXd data);
+    std::vector<int> hashSignature(VectorXd data);
 
-private:
+   private:
     int m_L;
-    vector<int> hashes;
-    vector<MatrixXd> randomMatrix;
+    std::vector<int> hashes;
+    std::vector<MatrixXd> randomMatrix;
 };
 
-#endif // COSINEDISTANCE_HPP
+#endif  // COSINEDISTANCE_HPP

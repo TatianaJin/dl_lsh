@@ -28,9 +28,9 @@ class NeuronLayer {
 
     virtual std::vector<double> activationFunction(std::vector<double> input) = 0;
 
-    int m_pos = -1;
-    std::vector<double> m_input;
-    std::vector<double> m_weightedSum;
+    int m_pos = -1;               // the index of layer in the whole neural network, i.e. indexed with 0 is input layer
+    std::vector<double> m_input;  // input to the layer
+    std::vector<double> m_weightedSum;  // pre-activation
     std::vector<double> m_delta;
     int m_prev_layer_size;
     int m_layer_size;

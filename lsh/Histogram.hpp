@@ -1,20 +1,17 @@
 #ifndef HISTOGRAM_HPP
 #define HISTOGRAM_HPP
 
-#include <unordered_map>
 #include <set>
+#include <unordered_map>
 
-using namespace std;
+class Histogram {
+   public:
+    void add(std::set<int> data);
 
-class Histogram
-{
-public:
-    void add(set<int> data);
+    std::set<int> thresholdSet(double count);
 
-    set<int> thresholdSet(double count);
-
-private:
-    unordered_map<int, int> histogram;
+   private:
+    std::unordered_map<int, int> histogram;
 };
 
-#endif // HISTOGRAM_HPP
+#endif  // HISTOGRAM_HPP

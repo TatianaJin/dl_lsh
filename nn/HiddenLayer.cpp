@@ -21,11 +21,8 @@ std::vector<double> HiddenLayer::forwardPropagation(VectorXd input, std::set<int
     for (auto& idx : nn_node_set) {
         double prod = 0;
         for (int i = 0; i < input.size(); i++) prod += m_theta->getWeightVector(m_pos, idx)[i] * input(i);
-        m_weightedSum[idx] =
-            prod +
-            m_theta->getBias(
-                m_pos,
-                idx);  // input.transpose() ????????? getWeightVector returns std::vector<double> instead of VectorXd
+        m_weightedSum[idx] = prod + m_theta->getBias(m_pos, idx);
+        // input.transpose() ????????? getWeightVector returns std::vector<double> instead of VectorXd
     }
     return activationFunction();
 }

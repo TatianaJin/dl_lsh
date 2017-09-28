@@ -13,7 +13,15 @@ NN_parameters::NN_parameters(const std::vector<std::shared_ptr<NeuronLayer>>& NN
     construct(NN_structure);
     weight_initialization(NN_structure);
     createLSHTable(m_tables, pool_dim, b, L, size_limit);
-    cout << "Finished initializing parameters" << endl;
+
+    auto n_layers = NN_structure.size();                                                  // debug
+    assert(m_layer_col.size() == n_layers);                                               // debug
+    assert(m_layer_row.size() == n_layers);                                               // debug
+    assert(m_weight_idx.size() == n_layers);                                              // debug
+    assert(m_bias_idx.size() == n_layers);                                                // debug
+    assert(m_tables.size() == n_layers - 1);                                              // debug
+    std::cout << "n_layers = " << m_layer_count << ", m_size = " << m_size << std::endl;  // debug
+    std::cout << "Finished initializing parameters" << endl;
 }
 
 void NN_parameters::construct(const std::vector<std::shared_ptr<NeuronLayer>>& NN_structure) {
@@ -54,7 +62,7 @@ void NN_parameters::weight_initialization(const std::vector<std::shared_ptr<Neur
         }
         global_idx += l->m_layer_size;
     }
-    assert(global_idx == m_size - 1);
+    assert(global_idx == m_size - 1);  // debug
 }
 
 std::vector<std::vector<int>> NN_parameters::computeHashes(std::vector<VectorXd> data) {
@@ -64,7 +72,7 @@ std::vector<std::vector<int>> NN_parameters::computeHashes(std::vector<VectorXd>
     for (size_t i = 0; i < data.size(); ++i) {
         // Progress log
         if (i % interval == 0) {
-            std::cout << "Completed " << i << " / " << data.size();
+            std::cout << "Completed " << i << " / " << data.size() << std::endl;
         }
         // input layer neuron selection TODO
         hashes[i] = m_tables[0].generateHashSignature(data[i]);
@@ -135,7 +143,7 @@ void NN_parameters::setTheta(int idx, double value) {
 }
 
 double NN_parameters::getWeight(int layer, int row, int col) {
-    assert(layer <= 0 && layer < m_layer_count);
+    assert(layer >= 0 && layer < m_layer_count);
     assert(row >= 0 && row < m_layer_row[layer]);
     assert(col >= 0 && col < m_layer_col[layer]);
 
@@ -144,7 +152,7 @@ double NN_parameters::getWeight(int layer, int row, int col) {
 }
 
 void NN_parameters::setWeight(int layer, int row, int col, double value) {
-    assert(layer <= 0 && layer < m_layer_count);
+    assert(layer >= 0 && layer < m_layer_count);
     assert(row >= 0 && row < m_layer_row[layer]);
     assert(col >= 0 && col < m_layer_col[layer]);
 

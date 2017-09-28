@@ -19,6 +19,7 @@ std::shared_ptr<NeuronLayer> ReLUNeuronLayer::clone() const {
 
 std::vector<double> ReLUNeuronLayer::activationFunction(std::vector<double> input) {
     std::vector<double> output;
+    output.reserve(input.size());
     for (auto& ele : input) {
         output.push_back(max(ele, 0.0));
     }

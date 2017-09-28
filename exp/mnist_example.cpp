@@ -54,6 +54,7 @@ void construct(int inputLayer, int outputLayer) {
     std::vector<std::shared_ptr<HiddenLayer>>().swap(hidden_layers);
     std::vector<std::shared_ptr<NeuronLayer>>().swap(NN_layers);
 
+    // TODO reserve space for vectors
     // input layer
     hidden_layers.push_back(std::make_shared<ReLUNeuronLayer>(inputLayer, hiddenLayers[0], L2_Lambda));
     for (size_t idx = 0; idx < hiddenLayers.size() - 1; ++idx) {
@@ -73,8 +74,7 @@ void execute(std::vector<VectorXd> train_data, std::vector<double> train_labels,
 
     for (int size = min_layers; size <= max_layers; ++size) {
         // Network structures
-        hiddenLayers.resize(size);
-        hiddenLayers.assign(size, hidden_layer_size);
+        hiddenLayers.resize(size, hidden_layer_size);
 
         // For hashing
         std::vector<int> sum_pool(size, hidden_pool_size);
@@ -129,7 +129,8 @@ int main(int argc, char** argv) {
     if (argc < 5) {
         std::cout << "Usage: MNISTExample <training_label_path> "
                      "<training_image_path> <test_label_path> "
-                     "<test_image_path>" << std::endl;
+                     "<test_image_path>"
+                  << std::endl;
         return 0;
     }
 

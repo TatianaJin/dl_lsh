@@ -18,16 +18,18 @@ NeuralCoordinator::NeuralCoordinator(NN_parameters* params, std::vector<std::sha
     }
 
     m_params = params;
-    m_networks.resize(LAYER_THREADS);  // construct LAYER_THREADS neural networks for multi-core training
+    m_networks.reserve(LAYER_THREADS);  // construct LAYER_THREADS neural networks for multi-core training
 
     for (int idx = 1; idx < LAYER_THREADS; idx++) {
-        std::vector<std::shared_ptr<HiddenLayer>> hiddenLayers1(hiddenLayers.size());
+        std::vector<std::shared_ptr<HiddenLayer>> hiddenLayers1;
+        hiddenLayers1.reserve(hiddenLayers.size());
         for (auto& hiddenLayer : hiddenLayers) {
             hiddenLayers1.push_back(
                 std::shared_ptr<HiddenLayer>(static_cast<HiddenLayer*>(hiddenLayer->clone().get())));
         }
 
-        std::vector<std::shared_ptr<NeuronLayer>> layers1(layers.size());
+        std::vector<std::shared_ptr<NeuronLayer>> layers1;
+        layers1.reserve(layers.size());
         for (auto& hiddenLayer1 : hiddenLayers1) {
             layers1.push_back(hiddenLayer1);
         }
@@ -65,7 +67,7 @@ void NeuralCoordinator::train(int max_epoch, std::vector<VectorXd> data, std::ve
     std::vector<std::vector<int>> test_hashes = m_params->computeHashes(test_data);
     std::cout << "Finished Pre-Computing Testing Hashes" << std::endl;
 
-    std::vector<int> data_idx = initIndices(labels.size());
+    std::vector<int> data_idx = initIndices(labels.size());  // TODO(tatiana): use itoa instead
     int m_examples_per_thread = data.size() / (UPDATE_SIZE * LAYER_THREADS);
     assert(data_idx.size() == labels.size());
 
@@ -143,15 +145,15 @@ std::vector<double> labels)
 */
 
 std::vector<int> NeuralCoordinator::initIndices(int length) {
-    std::vector<int> indices;
+    std::vector<int> indices(length);
     for (int idx = 0; idx < length; idx++) {
-        indices.push_back(idx);
+        indices[idx] = idx;
     }
     return indices;
 }
 
 void NeuralCoordinator::shuffle(std::vector<int> indices) {
-    for (int idx = 0; idx < indices.size(); idx++) {
+    for (size_t idx = 0; idx < indices.size(); idx++) {
         srand(time(NULL));
         int random = rand() % indices.size();
         int value = indices[idx];

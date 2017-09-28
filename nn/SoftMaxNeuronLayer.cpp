@@ -54,7 +54,8 @@ double SoftMaxNeuronLayer::weightInitialization() const {
 
 std::vector<double> SoftMaxNeuronLayer::activationFunction(std::vector<double> input) {
     double sum = 0.0;
-    std::vector<double> output(input.size());
+    std::vector<double> output;
+    output.reserve(input.size());
     for (auto& ele : input) {
         double temp = exp(ele);
         output.push_back(temp);

@@ -4,22 +4,22 @@
 #include <Eigen/Dense>
 #include <vector>
 
-using namespace std;
-using namespace Eigen;
+using Eigen::VectorXd;
+using Eigen::MatrixXd;
 
-class RandomProjection
-{
-public:
-    RandomProjection(vector<int> hashes, vector<MatrixXd> projection_matrix, VectorXd query);
+class RandomProjection {  // TODO(Tatiana): just a functor, no need to have states
+   public:
+    RandomProjection(std::vector<int>* hashes, std::vector<MatrixXd>* projection_matrix, VectorXd* query);
 
-    vector<int> run();
+    std::vector<int> run();
 
-private:
+   private:
     int sign(double value);
 
-    vector<MatrixXd> m_projection_matrix;
-    VectorXd m_query;
-    vector<int> m_hashes;
+    // not owned, got from CosineDistance
+    std::vector<MatrixXd>* m_projection_matrix;
+    VectorXd* m_query;
+    std::vector<int>* m_hashes;
 };
 
-#endif // RANDOMPROJECTION_HPP
+#endif  // RANDOMPROJECTION_HPP
