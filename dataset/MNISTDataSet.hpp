@@ -5,13 +5,12 @@
 #include <Eigen/Dense>
 #include <string>
 
-using namespace std;
-using namespace Eigen;
+using Eigen::VectorXd;
 
 class MNISTDataSet
 {
 public:
-    static pair<vector<VectorXd>, vector<double>> loadDataSet(string label_path, string image_path);
+    static std::pair<std::vector<VectorXd>, std::vector<double>> loadDataSet(std::string label_path, std::string image_path);
 
 private:
     static int LABEL_MAGIC;

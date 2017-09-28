@@ -3,23 +3,22 @@
 #include <vector>
 #include "HiddenLayer.hpp"
 
-using namespace std;
-
-class SoftMaxNeuronLayer : public HiddenLayer
-{
-public:
+class SoftMaxNeuronLayer : public HiddenLayer {
+   public:
     SoftMaxNeuronLayer(int prev_layer_size, int layer_size, double L2);
 
-    vector<double> forwardPropagation(vector<double> input, NN_parameters m_theta);
+    std::vector<double> forwardPropagation(std::vector<double> input, NN_parameters* m_theta) override;
 
-    vector<double> calculateDelta(vector<double> prev_layer_size, NN_parameters m_theta);
+    std::vector<double> calculateDelta(std::vector<double> prev_layer_size, NN_parameters* m_theta) override;
 
-    void calculateGradient(NN_parameters m_theta);
+    void calculateGradient(NN_parameters* m_theta) override;
 
-protected:
-    double weightInitialization();
+    std::shared_ptr<NeuronLayer> clone() const override;
 
-    vector<double> activationFunction(vector<double> input);
+   protected:
+    double weightInitialization() const override;
 
-    double derivative(double input);
+    std::vector<double> activationFunction(std::vector<double> input) override;
+
+    double derivative(double input) override;
 };

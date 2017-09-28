@@ -15,7 +15,7 @@ class HashBuckets
 public:
     HashBuckets() = default;
     
-    HashBuckets(double sizeLimit, int poolDim, int L, CosineDistance hashFunction);
+    HashBuckets(double sizeLimit, int poolDim, int L, const CosineDistance& hashFunction);
 
     void LSHAdd(int recIndex, VectorXd data);
 

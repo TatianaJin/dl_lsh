@@ -1,29 +1,27 @@
 #ifndef ICOSTFUNCTION_HPP
 #define ICOSTFUNCTION_HPP
 
-#include <cfloat>
-#include <cmath>
-#include <iostream>
+#include <memory>
 #include <vector>
+
 #include "NeuronLayer.hpp"
 
 using namespace std;
 
-class ICostFunction
-{
-public:
+class ICostFunction {
+   public:
     ICostFunction() = default;
 
-    double correct(vector<double> y_hat, double labels);
+    double correct(std::vector<double> y_hat, double labels);
 
-    double accuracy(vector<vector<double>> y_hat, vector<double> labels);
+    double accuracy(std::vector<std::vector<double>> y_hat, std::vector<double> labels);
 
-    double costFunction(vector<double> y_hat, double labels);
+    double costFunction(std::vector<double> y_hat, double labels);
 
-    vector<double> outputDelta(vector<double> y_hat, double labels, NeuronLayer l);
+    std::vector<double> outputDelta(std::vector<double> y_hat, double labels, std::shared_ptr<NeuronLayer> l);
 
-private:
-    int max_idx(vector<double> v);
+   private:
+    int max_idx(std::vector<double> v);
 };
 
-#endif // ICOSTFUNCTION_HPP
+#endif  // ICOSTFUNCTION_HPP

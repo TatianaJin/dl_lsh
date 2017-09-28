@@ -3,7 +3,7 @@
 #include "Pooling.hpp"
 #include "HashBuckets.hpp"
 
-HashBuckets::HashBuckets(double sizeLimit, int poolDim, int L, CosineDistance hashFunction)
+HashBuckets::HashBuckets(double sizeLimit, int poolDim, int L, const CosineDistance& hashFunction)
 {
     m_hashFunction = hashFunction;
     m_poolDim = poolDim;

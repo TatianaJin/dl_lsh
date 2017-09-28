@@ -1,0 +1,11 @@
+function(cache_var var)
+    set(__list "")
+    foreach(value ${ARGN})
+        list(APPEND __list ${value})
+    endforeach()
+    set(${var} ${__list} CACHE INTERNAL "")
+endfunction()
+
+function(default_prop target)
+    set_property(TARGET ${target} PROPERTY CXX_STANDARD 14)
+endfunction()

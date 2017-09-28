@@ -1,45 +1,48 @@
 #ifndef NEURALCOORDINATOR_HPP
 #define NEURALCOORDINATOR_HPP
 
+#include <Eigen/Dense>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
-#include <Eigen/Dense>
-#include "NN_parameters.hpp"
-#include "NeuronLayer.hpp"
-#include "HiddenLayer.hpp"
-#include "NeuralNetwork.hpp"
-#include "ICostFunction.hpp"
 
-using namespace std;
+#include "HiddenLayer.hpp"
+#include "ICostFunction.hpp"
+#include "NN_parameters.hpp"
+#include "NeuralNetwork.hpp"
+#include "NeuronLayer.hpp"
+
 using namespace Eigen;
 
-class NeuralCoordinator
-{
-public:
-	static int INT_SIZE;
+class NeuralCoordinator {
+   public:
+    static int INT_SIZE;
     static int LAYER_THREADS;
     static int UPDATE_SIZE;
 
-	NeuralCoordinator(string model_title, string title, string dataset, NN_parameters params, vector<NeuronLayer*> layers, vector<HiddenLayer*> hiddenLayers, double L2, ICostFunction cf);
+    NeuralCoordinator(NN_parameters* params, std::vector<std::shared_ptr<NeuronLayer>> layers,
+                      std::vector<std::shared_ptr<HiddenLayer>> hiddenLayers, double L2, ICostFunction* cf);
 
-	void test(vector<VectorXd> data, vector<double> labels);
+    void test(std::vector<VectorXd> data, std::vector<double> labels);
 
-	void train(int max_epoch, vector<VectorXd> data, vector<double> labels, vector<VectorXd> test_data, vector<double> test_labels);
+    void train(int max_epoch, std::vector<VectorXd> data, std::vector<double> labels, std::vector<VectorXd> test_data,
+               std::vector<double> test_labels);
 
-private:
-	vector<int> initIndices(int length);
+   private:
+    std::vector<int> initIndices(int length);
 
-	void shuffle(vector<int> indices);
+    void shuffle(std::vector<int> indices);
 
-	double calculateActiveNodes(double total);
+    double calculateActiveNodes(double total);
 
-	// void run(int start, int end, NeuralNetwork network, vector<vector<int>> input_hashes, vector<VectorXd> data, vector<double> labels);
+    // void run(int start, int end, NeuralNetwork network, std::vector<std::vector<int>>
+    // input_hashes, std::vector<VectorXd> data, std::vector<double> labels);
 
-	int min(int ele1, int ele2);
- 
-    vector<NeuralNetwork> m_networks;
-    NN_parameters m_params;
+    int min(int ele1, int ele2);
+
+    std::vector<NeuralNetwork> m_networks;
+    NN_parameters* m_params;  // not owned
     string m_modelTitle;
     string m_model_path;
     string m_train_path;
@@ -48,4 +51,4 @@ private:
     int update_threshold = 20;
 };
 
-#endif // NEURALCOORDINATOR_HPP
+#endif  // NEURALCOORDINATOR_HPP

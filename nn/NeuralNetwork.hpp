@@ -1,37 +1,36 @@
 #ifndef NEURALNETWORK_HPP
 #define NEURALNETWORK_HPP
 
+#include <Eigen/Dense>
 #include <iostream>
 #include <string>
 #include <vector>
-#include <Eigen/Dense>
-#include "NeuronLayer.hpp"
 #include "HiddenLayer.hpp"
 #include "ICostFunction.hpp"
+#include "NeuronLayer.hpp"
 
-using namespace std;
-using namespace Eigen;
+using Eigen::VectorXd;
 
-class NeuralNetwork
-{
-public:
+class NeuralNetwork {
+   public:
     NeuralNetwork() = default;
 
-    NeuralNetwork(NN_parameters params, vector<NeuronLayer*> layers, vector<HiddenLayer*> hiddenLayers, double L2, ICostFunction cf);
+    NeuralNetwork(NN_parameters* params, std::vector<std::shared_ptr<NeuronLayer>> layers,
+                  std::vector<std::shared_ptr<HiddenLayer>> hiddenLayers, double L2, ICostFunction* cf);
 
-    void execute(vector<int> hashes, VectorXd input, double labels, bool training);
+    void execute(std::vector<int> hashes, VectorXd input, double labels, bool training);
 
-    double test(vector<vector<int>> input_hashes, vector<VectorXd> data, vector<double> labels);
+    double test(std::vector<std::vector<int>> input_hashes, std::vector<VectorXd> data, std::vector<double> labels);
 
-    vector<double> forwardPropagation(VectorXd input, vector<int> hashes, bool training);
+    std::vector<double> forwardPropagation(VectorXd input, std::vector<int> hashes, bool training);
 
-    void backPropagation(vector<double> y_hat, double labels);
+    void backPropagation(std::vector<double> y_hat, double labels);
 
     long calculateActiveNodes();
 
     long calculateMultiplications();
 
-    vector<vector<int>> computeHashes(vector<VectorXd> data);
+    std::vector<std::vector<int>> computeHashes(std::vector<VectorXd> data);
 
     void updateHashTables(int miniBatch_size);
 
@@ -46,16 +45,16 @@ public:
     double getTheta(int idx);
     // ------------ double check -------------------
 
-protected:
+   protected:
     double m_train_correct;
 
-private:
-    vector<NeuronLayer*> m_layers; // m_layers - m_hidden_layers = outputLayer
-    vector<HiddenLayer*> m_hidden_layers;
+   private:
+    NN_parameters* m_params;                             // shared among neural networks, not owned
+    std::vector<std::shared_ptr<NeuronLayer>> m_layers;  // m_layers - m_hidden_layers = outputLayer
+    std::vector<std::shared_ptr<HiddenLayer>> m_hidden_layers;
     double L2_lambda;
-    ICostFunction m_cf;
-    NN_parameters m_params;
+    std::shared_ptr<ICostFunction> m_cf;  // shared
     double m_cost;
 };
 
-#endif // NEURALNETWORK_HPP
+#endif  // NEURALNETWORK_HPP
