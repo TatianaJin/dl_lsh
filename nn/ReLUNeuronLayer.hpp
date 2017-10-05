@@ -6,9 +6,8 @@
 #include <memory>
 #include <random>
 #include <vector>
-#include "HiddenLayer.hpp"
 
-using namespace std;
+#include "HiddenLayer.hpp"
 
 class ReLUNeuronLayer : public HiddenLayer {
    public:
@@ -18,7 +17,7 @@ class ReLUNeuronLayer : public HiddenLayer {
    protected:
     double weightInitialization() const override;
 
-    std::vector<double> activationFunction(std::vector<double> input) override;
+    VectorXd activationFunction(const std::vector<double>& input) override;
 
     double derivative(double input) override;
 };

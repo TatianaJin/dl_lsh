@@ -3,28 +3,30 @@
 #include "SoftMaxNeuronLayer.hpp"
 
 SoftMaxNeuronLayer::SoftMaxNeuronLayer(int prev_layer_size, int layer_size, double L2)
-    : HiddenLayer(prev_layer_size, layer_size, L2) {}
+    : NeuronLayer(prev_layer_size, layer_size, L2) {}
 
 std::shared_ptr<NeuronLayer> SoftMaxNeuronLayer::clone() const {
-    return std::make_shared<SoftMaxNeuronLayer>(m_prev_layer_size, m_layer_size, L2_lambda);
+    auto copy = std::make_shared<SoftMaxNeuronLayer>(m_prev_layer_size, m_layer_size, L2_lambda);
+    copy->m_pos = this->m_pos;
+    return copy;
 }
 
-std::vector<double> SoftMaxNeuronLayer::forwardPropagation(std::vector<double> input, NN_parameters* m_theta) {
+VectorXd SoftMaxNeuronLayer::forwardPropagation(const VectorXd& input, NN_parameters* m_theta) {
     assert(input.size() == m_prev_layer_size);
     m_input = input;
 
     for (int jdx = 0; jdx < m_layer_size; ++jdx) {
         m_weightedSum[jdx] = 0.0;
         for (int idx = 0; idx < m_prev_layer_size; ++idx) {
-            m_weightedSum[jdx] += m_theta->getWeight(m_pos, jdx, idx) * m_input[idx];
+            m_weightedSum[jdx] += m_theta->getWeight(m_pos, jdx, idx) * m_input(idx);
         }
         m_weightedSum[jdx] += m_theta->getBias(m_pos, jdx);
     }
     return activationFunction(m_weightedSum);
 }
 
-std::vector<double> SoftMaxNeuronLayer::calculateDelta(std::vector<double> prev_layer_delta,
-                                                       NN_parameters* m_theta) {  // TODO:copy by pointer only
+VectorXd SoftMaxNeuronLayer::calculateDelta(const VectorXd& prev_layer_delta,
+                                                       NN_parameters* m_theta) {
     assert(prev_layer_delta.size() == m_layer_size);
     m_delta = prev_layer_delta;
     return m_delta;
@@ -37,7 +39,7 @@ void SoftMaxNeuronLayer::calculateGradient(NN_parameters* m_theta) {
         for (int jdx = 0; jdx < m_prev_layer_size; ++jdx) {
             m_theta->stochasticGradientDescent(
                 m_theta->weightOffset(m_pos, idx, jdx),
-                m_delta[idx] * m_input[jdx] + L2_lambda * m_theta->getWeight(m_pos, idx, jdx));
+                m_delta[idx] * m_input(jdx) + L2_lambda * m_theta->getWeight(m_pos, idx, jdx));
         }
         // set bias gradient
         m_theta->stochasticGradientDescent(m_theta->biasOffset(m_pos, idx), m_delta[idx]);
@@ -45,26 +47,22 @@ void SoftMaxNeuronLayer::calculateGradient(NN_parameters* m_theta) {
 }
 
 double SoftMaxNeuronLayer::weightInitialization() const {
-    random_device rd;
-    mt19937 generator(rd());
-    uniform_real_distribution<double> distribution(0.0, 1.0);
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_real_distribution<double> distribution(0.0, 1.0);
     double interval = 2.0 * sqrt(6.0 / (m_prev_layer_size + m_layer_size));
     return distribution(generator) * (2 * interval) - interval;
 }
 
-std::vector<double> SoftMaxNeuronLayer::activationFunction(std::vector<double> input) {
+VectorXd SoftMaxNeuronLayer::activationFunction(const std::vector<double>& input) {
     double sum = 0.0;
-    std::vector<double> output;
-    output.reserve(input.size());
+    VectorXd output(input.size());
+    int idx = 0;
     for (auto& ele : input) {
-        double temp = exp(ele);
-        output.push_back(temp);
+        double temp = std::exp(ele);
+        output(idx) = temp;
         sum += temp;
     }
-    for (auto& ele : output) {
-        ele /= sum;
-    }
+    output = output / sum;
     return output;
 }
-
-double SoftMaxNeuronLayer::derivative(double input) { return (input > 0) ? 1.0 : 0.0; }

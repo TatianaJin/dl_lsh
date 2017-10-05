@@ -18,32 +18,32 @@ class HiddenLayer : public NeuronLayer {
 
     virtual double derivative(double input) = 0;
 
-    std::vector<double> forwardPropagation(VectorXd input, set<int> nn_node_set, bool training, NN_parameters* m_theta);
-
-    // some forwardPropagation functions should be added later
-    std::vector<double> forwardPropagation(std::vector<double> input, NN_parameters* m_theta);
-
-    std::vector<double> forwardPropagation(std::vector<double> input, bool training, NN_parameters* m_theta);
-
-    std::vector<double> forwardPropagation(VectorXd input, bool training, NN_parameters* m_theta);
-
-    std::vector<double> forwardPropagation(VectorXd input, std::vector<int> hashes, bool training,
+    VectorXd forwardPropagation(const VectorXd& input, std::set<int> nn_node_set, bool training,
                                            NN_parameters* m_theta);
 
-    std::vector<double> calculateDelta(std::vector<double> prev_layer_delta, NN_parameters* m_theta);
+    // some forwardPropagation functions should be added later
+    VectorXd forwardPropagation(const VectorXd& input, NN_parameters* m_theta);
+
+    VectorXd forwardPropagation(const std::vector<double>& input, bool training, NN_parameters* m_theta);
+
+    VectorXd forwardPropagation(const VectorXd& input, bool training, NN_parameters* m_theta);
+
+    VectorXd forwardPropagation(const VectorXd& input, const std::vector<int>& hashes, bool training,
+                                           NN_parameters* m_theta);
+
+    VectorXd calculateDelta(const VectorXd& prev_layer_delta, NN_parameters* m_theta);
 
     void calculateGradient(NN_parameters* m_theta);
 
     void updateHashTables(double size);
 
-    VectorXd vectorize(std::vector<double> data, int offset, int length);
+    VectorXd vectorize(const std::vector<double>& data, int offset, int length);
 
-    VectorXd vectorize(std::vector<double> data);
+    VectorXd vectorize(const std::vector<double>& data);
 
-    set<int> m_node_set;        // number of nodes that have been activated in that layer?
-    set<int> m_total_node_set;  // total number of nodes in that layer??
-    long m_total_nn_set_size;
-    long m_total_multiplication;
+    std::set<int> m_node_set;  // active node set in one forward propagation
+    unsigned long long m_total_nn_set_size = 0;
+    unsigned long long m_total_multiplication = 0;
 };
 
 #endif  // HIDDENLAYER_HPP

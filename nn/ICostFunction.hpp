@@ -6,22 +6,21 @@
 
 #include "NeuronLayer.hpp"
 
-using namespace std;
-
 class ICostFunction {
    public:
     ICostFunction() = default;
 
-    double correct(std::vector<double> y_hat, double labels);
+    double correct(const std::vector<double>& y_hat, double labels);
 
-    double accuracy(std::vector<std::vector<double>> y_hat, std::vector<double> labels);
+    double accuracy(const std::vector<VectorXd>& y_hat, const std::vector<double>& labels);
 
-    double costFunction(std::vector<double> y_hat, double labels);
+    double costFunction(const VectorXd& y_hat, double labels);
 
-    std::vector<double> outputDelta(std::vector<double> y_hat, double labels, std::shared_ptr<NeuronLayer> l);
+    VectorXd outputDelta(const VectorXd& y_hat, double labels, std::shared_ptr<NeuronLayer> l);
 
    private:
-    int max_idx(std::vector<double> v);
+    int max_idx(const std::vector<double>& v);
+    int max_idx(const VectorXd& v);
 };
 
 #endif  // ICOSTFUNCTION_HPP

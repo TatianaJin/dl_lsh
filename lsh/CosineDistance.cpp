@@ -9,11 +9,12 @@ CosineDistance::CosineDistance(int b, int L, int d) {
     hashes.resize(m_L);
     randomMatrix.reserve(m_L);
     for (int i = 0; i < m_L; ++i) {
-        MatrixXd rand_m = MatrixXd::Random(b, d);
-        randomMatrix.push_back(rand_m);  // TODO(tatiana): check copy / move constructor of matrixxd
+        // the assignment of coefficients follows uniform distrbution [-1,1]
+        randomMatrix.push_back(MatrixXd::Random(b, d));
     }
 }
 
-std::vector<int> CosineDistance::hashSignature(VectorXd data) {  // TODO check if data need copy
-    return RandomProjection(&hashes, &randomMatrix, &data).run();
+std::vector<int> CosineDistance::hashSignature(VectorXd data) {
+    RandomSignProjection::run(randomMatrix, data, &hashes);
+    return hashes;
 }

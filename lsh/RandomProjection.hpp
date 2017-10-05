@@ -7,19 +7,12 @@
 using Eigen::VectorXd;
 using Eigen::MatrixXd;
 
-class RandomProjection {  // TODO(Tatiana): just a functor, no need to have states
+class RandomSignProjection {
    public:
-    RandomProjection(std::vector<int>* hashes, std::vector<MatrixXd>* projection_matrix, VectorXd* query);
-
-    std::vector<int> run();
+    static void run(const std::vector<MatrixXd>& projection_matrixi, const VectorXd& queryi, std::vector<int>* hashes);
 
    private:
-    int sign(double value);
-
-    // not owned, got from CosineDistance
-    std::vector<MatrixXd>* m_projection_matrix;
-    VectorXd* m_query;
-    std::vector<int>* m_hashes;
+    static int sign(double value);
 };
 
 #endif  // RANDOMPROJECTION_HPP

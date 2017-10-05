@@ -1,17 +1,15 @@
 #ifndef LSH_HPP
 #define LSH_HPP
 
-#include <vector>
 #include <Eigen/Dense>
+#include <vector>
 
-using namespace std;
-using namespace Eigen;
+using Eigen::VectorXd;
 
-class LSH
-{
-public:
-    virtual vector<int> hashSignature(VectorXd data) = 0;
+class LSH {
+   public:
+    virtual std::vector<int> hashSignature(VectorXd data) = 0;
     virtual ~LSH() = default;
 };
 
-#endif // LSH_HPP
+#endif  // LSH_HPP

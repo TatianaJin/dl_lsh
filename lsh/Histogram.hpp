@@ -6,12 +6,12 @@
 
 class Histogram {
    public:
-    void add(std::set<int> data);
+    void add(const std::set<int>& data);
 
     std::set<int> thresholdSet(double count);
 
    private:
-    std::unordered_map<int, int> histogram;
+    std::unordered_map<int, int> histogram;  // <node idx, count>
 };
 
 #endif  // HISTOGRAM_HPP

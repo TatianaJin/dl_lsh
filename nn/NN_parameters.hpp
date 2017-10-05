@@ -26,19 +26,19 @@ class NN_parameters {
 
     void weight_initialization(const std::vector<std::shared_ptr<NeuronLayer>>& NN_structure);
 
-    std::vector<std::vector<int>> computeHashes(std::vector<VectorXd> data);
+    std::vector<std::vector<int>> computeHashes(std::vector<VectorXd>& data);
 
     void rebuildTables();
 
-    void createLSHTable(std::vector<HashBuckets>& tables, const std::vector<int>& poolDim, const std::vector<int>& b,
+    void createLSHTable(std::vector<HashBuckets>* tables, const std::vector<int>& poolDim, const std::vector<int>& b,
                         const std::vector<int>& L, const std::vector<double>& size_limit);
 
     // consider replacing std::vector<double> with VectorXd
     std::vector<double> getWeight(int layer, int node);
 
-    set<int> retrieveNodes(int layer, VectorXd input);
+    std::set<int> retrieveNodes(int layer, const VectorXd& input);
 
-    set<int> retrieveNodes(int layer, std::vector<int> hashes);
+    std::set<int> retrieveNodes(int layer, const std::vector<int>& hashes);
 
     void timeStep();
 
@@ -70,12 +70,12 @@ class NN_parameters {
 
     void stochasticGradientDescent(int idx, double gradient);
 
-    VectorXd vectorize(std::vector<double> data, int offset, int length);
+    VectorXd vectorize(const std::vector<double>& data, int offset, int length);
 
-    VectorXd vectorize(std::vector<double> data);
+    VectorXd vectorize(const std::vector<double>& data);
 
    private:
-    int m_epoch_offset;
+    int m_epoch_offset = 0;
     std::vector<std::shared_ptr<NeuronLayer>> m_layers;
 
     std::vector<int> m_weight_idx;
