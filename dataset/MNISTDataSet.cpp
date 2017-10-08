@@ -77,7 +77,7 @@ std::pair<std::vector<VectorXd>, std::vector<double>> MNISTDataSet::loadDataSet(
     unsigned char pixel;
     while (label_stream.is_open() && label_idx < numLabels) {
         label_stream.read(&label, sizeof(char));
-        image_list[numImagesRead] = VectorXd(numRows * numCols);
+        image_list[numImagesRead] = VectorXd::Zero(numRows * numCols);
         label_list[label_idx++] = (double)label;
         int image_idx = 0;
 
@@ -85,7 +85,7 @@ std::pair<std::vector<VectorXd>, std::vector<double>> MNISTDataSet::loadDataSet(
             for (int rowIdx = 0; rowIdx < numRows; rowIdx++)  // the data is actually stored row-wise...
             {
                 assert(image_stream.is_open());  // debug
-                image_stream >> pixel;
+                image_stream.read((char*)&pixel, sizeof(char));
                 image_list[numImagesRead](image_idx++) = ((double)pixel) / 255.0;
             }
         }

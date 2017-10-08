@@ -19,6 +19,7 @@ class CosineDistance : public LSH {
     int m_L;
     std::vector<int> hashes;
     std::vector<MatrixXd> randomMatrix;
+    std::mt19937 rng;
 };
 
 #endif  // COSINEDISTANCE_HPP
