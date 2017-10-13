@@ -30,7 +30,7 @@ class NN_parameters {
         weight_initialization(NN_structure);
         if (dropout) createLSHTable(&m_tables, pool_dim, b, L, size_limit);
 
-        DLOG(INFO) << GREEN("[INFO] ") << "Finished initializing parameters";
+        std::cout << GREEN("[INFO] ") << "Finished initializing parameters";
     }
 
     int epoch_offset() { return m_epoch_offset; }
